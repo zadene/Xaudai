@@ -1,1 +1,30 @@
+name: 🔨 BUAT APK XAUUSD 5IN1
+on: workflow_dispatch
+jobs:
+  bangun:
+    runs-on: ubuntu-22.04
+    permissions: {contents:write}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version:"3.11"}
+      - name: ⚡ Siapkan alat
+        run: |
+          sudo apt update -qq && sudo apt install -y openjdk-17-jdk zip unzip autoconf libtool cmake zlib1g-dev libffi-dev libssl-dev
+          pip install --upgrade buildozer cython virtualenv
+      - name: 🗂️ Cache agar cepat
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.buildozer
+            .buildozer
+          key: buildozer-${{ hashFiles('buildozer.spec') }}
+      - name: 🔥 KOMPILASI JADI APK
+        run: buildozer android debug 2>&1 | tail -80
+      - name: 📤 KELUARKAN HASIL
+        uses: actions/upload-artifact@v4
+        with:
+          name: XAUUSD_5IN1_APK_SIAP_INSTAL
+          path: bin/*.apk
+          retention-days: 90
 
